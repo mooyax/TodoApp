@@ -45,16 +45,15 @@ const TODO = "@todoapp.todo"
 const TodoItem = (props) => {
   let icon = null
   if (props.done === true) {
-    icon = <Icon2 name="done" right/>
+    icon = <Icon2 name="done" />
   }
   return (
     <TouchableOpacity onPress={props.onTapTodoItem}>
-      <ListItem bottomDivider>
-          {icon}
-        <ListItem.Content>
-            <ListItem.Title>{props.title}</ListItem.Title>
-        </ListItem.Content>   
-      </ListItem>
+      <ListItem
+        title={props.title}
+        rightIcon={icon}
+        bottomDivider
+      />
     </TouchableOpacity>
   )
 }
