@@ -66,6 +66,7 @@ class TodoScreen extends React.Component {
       inputText: "",
       filterText: "",
     }
+    this.refsArray = []; 
   }
 
 
@@ -87,7 +88,6 @@ class TodoScreen extends React.Component {
     if (title == "") {
       return
     }
-    console.log("ADD")
     this.props.addTodo(title)
     this.setState({
       inputText: ""
@@ -96,32 +96,40 @@ class TodoScreen extends React.Component {
   }
 
   onDeleteItem = (todoItem) => { 
-    console.log("DELETE")
     this.props.deleteTodo(todoItem);
   }
 
   onTapTodoItem = (todoItem) => {
-    console.log("TAP")
     this.props.toggleTodo(todoItem)
   }
 
   renderRightActions = (progress, todoItem) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 1],
+      outputRange: [80, 1],
     });
+
+    const pressHandler = () => {
+      this.close(todoItem);
+      this.props.deleteTodo(todoItem)
+    };
+
     return (
-      <RectButton onPress={console.log('renderRight_REctButton')}>
+      <RectButton>
         <AnimatedIcon
           name="delete"
           size={34}
           color="#f00"
           style={[styles.actionIcon]}
+          onPress={pressHandler}
         /> 
       </RectButton>
     );
   };
 
+  close = (todoItem) => {
+    this.refsArray[todoItem.index].close();
+  };
 
   render() {
     const filterText = this.state.filterText
@@ -131,8 +139,6 @@ class TodoScreen extends React.Component {
     }
 
     const platform = Platform.OS == 'ios' ? 'ios' : 'android'
-
-
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">    
@@ -150,7 +156,9 @@ class TodoScreen extends React.Component {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({item}) => 
             <Swipeable 
-              renderRightActions={(progress) => this.renderRightActions(progress,item)} 
+              ref={ref => this.refsArray[item.index] =ref}
+              renderRightActions={(progress) => this.renderRightActions(progress,item)} 　
+              friction={2}
               > 
               <TodoItem
                 title={item.title}

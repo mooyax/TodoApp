@@ -8,6 +8,10 @@ const initialState = {
 
 const todos = (state = initialState, action) => {
 
+    const todoItem = action.todo
+    const todos = Object.assign([], state.todos)
+    const index = todos.indexOf(todoItem)
+
     switch(action.type) {
         case TODO.ADD:
             const newTodo = {title: action.text, index: state.currentIndex, done: false}
@@ -18,19 +22,15 @@ const todos = (state = initialState, action) => {
             }
             
         case TODO.DELETE:
-            //console.log("DELETE action!" + index)
-            //todos.forEach(obj => console.log(obj.title))
-            //console.log("DELETE after!")
-            //todos.splice(index,1)
-            //todos.forEach(obj => console.log(obj.title))
+            todos.splice(index,1)
             return {
                 ...state,
+                todos:todos
             }
           
         case TODO.TOGGLE:
-            const todoItem = action.todo
-            const todos = Object.assign([], state.todos)
-            const index = todos.indexOf(todoItem)
+   
+   
             todoItem.done = !todoItem.done
             todos[index] = todoItem
             return {
