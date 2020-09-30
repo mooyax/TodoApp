@@ -115,7 +115,7 @@ class TodoScreen extends React.Component {
     };
 
     return (
-      <RectButton>
+      <Animated.View > 
         <AnimatedIcon
           name="delete"
           size={34}
@@ -123,7 +123,7 @@ class TodoScreen extends React.Component {
           style={[styles.actionIcon]}
           onPress={pressHandler}
         /> 
-      </RectButton>
+      </Animated.View> 
     );
   };
 
