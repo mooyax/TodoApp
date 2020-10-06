@@ -1,12 +1,14 @@
 import { TODO } from './actions'
 
+//TodoのReducer
 
+//初期ステート
 const initialState = {
     todos: [],
     currentIndex: 0,
 }
 
-const todos = (state = initialState, action) => {
+const todoReducer = (state = initialState, action) => {
 
     const todoItem = action.todo
     const todos = Object.assign([], state.todos)
@@ -43,4 +45,4 @@ const todos = (state = initialState, action) => {
     }
 }
 
-export default todos
+export default todoReducer

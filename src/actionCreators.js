@@ -1,5 +1,6 @@
-import { TODO } from './actions'
+import { TODO } from './actions';
 
+//アクション関数
 export const addTodo = (text) => {
     return {
         type: TODO.ADD,

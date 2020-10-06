@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useCallback,useReducer  } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -12,7 +12,8 @@ import {
   AsyncStorage,
   KeyboardAvoidingView, 
   TouchableOpacity,
-  Animated
+  Animated,
+  Alert
 } from 'react-native';
 
 import {  FlatList, RectButton } from 'react-native-gesture-handler';
@@ -32,12 +33,13 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Icon2);
 
-import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper'
+import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper';
 
-import { connect } from 'react-redux'
-import {addTodo, deleteTodo, toggleTodo } from './actionCreators'
+import { useDispatch, useSelector } from "react-redux";
+import {addTodo, deleteTodo, toggleTodo } from './actionCreators';
 
 
+const HEADER_HEIGHT = 44;
 const STATUSBAR_HEIGHT = getStatusBarHeight();
 
 const TODO = "@todoapp.todo"
@@ -58,18 +60,25 @@ const TodoItem = (props) => {
   )
 }
 
-class TodoScreen extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      inputText: "",
-      filterText: "",
-    }
-    this.refsArray = []; 
-  }
 
 
+const TodoScreen = () => {
+
+
+  const [inputText, setInputText] = useState("")
+  const [filterText, setFilterText] = useState("")
+  const [refsArray, setRefsArray] = useState([])
+
+  const dispatch = useDispatch();
+
+  const  todos = useSelector(state => state.todos.todos);
+   // ステートをグローバルストアから取り出す
+
+
+ 
+  //uncheckTodoItem = () => {
+  //  return this.props.todos.length
+  //}
 
  /*
   shouldComponentUpdate(nextProps, nextState) {
@@ -83,35 +92,35 @@ class TodoScreen extends React.Component {
   }
  */
 
-  onAddItem = () => {
-    const title = this.state.inputText
+  const onAddItem = useCallback(() => {
+
+    const title = inputText
     if (title == "") {
       return
-    }
-    this.props.addTodo(title)
-    this.setState({
-      inputText: ""
-    })
+    };
+    dispatch(addTodo(title));
+    setInputText("");
 
-  }
+  },[inputText,dispatch]);
 
-  onDeleteItem = (todoItem) => { 
-    this.props.deleteTodo(todoItem);
-  }
 
-  onTapTodoItem = (todoItem) => {
-    this.props.toggleTodo(todoItem)
-  }
+  const onDeleteItem = useCallback((todoItem) => { 
+    dispatch(deleteTodo(todoItem));
+  },[dispatch]);
 
-  renderRightActions = (progress, todoItem) => {
+  const onTapTodoItem = useCallback((todoItem) => {
+    dispatch(toggleTodo(todoItem));
+  },[dispatch]);
+
+  const renderRightActions = (progress, todoItem) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
       outputRange: [80, 1],
     });
 
     const pressHandler = () => {
-      this.close(todoItem);
-      this.props.deleteTodo(todoItem)
+      close(todoItem);
+      dispatch(deleteTodo(todoItem));
     };
 
     return (
@@ -128,42 +137,45 @@ class TodoScreen extends React.Component {
   };
 
   close = (todoItem) => {
-    this.refsArray[todoItem.index].close();
+    refsArray[todoItem.index].close();
   };
 
-  render() {
-    const filterText = this.state.filterText
-    let todo = this.props.todos
-    if (filterText !== "") {
-      todo = todo.filter(t => t.title.includes(filterText))
-    }
+  if (filterText !== "") {
+    todo = todo.filter(t => t.title.includes(filterText))
+  }
 
-    const platform = Platform.OS == 'ios' ? 'ios' : 'android'
-
-    return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">    
+  const platform = Platform.OS == 'ios' ? 'ios' : 'android'
+  return (
+      <KeyboardAvoidingView 
+        style={styles.container} 
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.select({
+          ios: HEADER_HEIGHT+ 44, // iOS
+          android:HEADER_HEIGHT + StatusBar.currentHeight, // android 
+        })}
+        >    
         <SearchBar
           platform={platform}
           cancelButtonTitle="Cancel"
-          onChangeText={(text) => this.setState({filterText: text})}
-          onClear={() => this.setState({filterText: ""})}
-          value={this.state.filterText}
+          onChangeText={(text) => setFilterText(text)}
+          onClear={() => setfilterText("")}
+          value={filterText}
           placeholder="Type filter text"
         />
         <FlatList
-          data={todo}
-          extraData={this.state}
+          data={todos}
+          //extraData={state}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({item}) => 
             <Swipeable 
-              ref={ref => this.refsArray[item.index] =ref}
-              renderRightActions={(progress) => this.renderRightActions(progress,item)} 　
+              ref={ref => refsArray[item.index] =ref}
+              renderRightActions={(progress) => renderRightActions(progress,item)} 　
               friction={2}
               > 
               <TodoItem
                 title={item.title}
                 done={item.done}
-                onTapTodoItem={() => this.onTapTodoItem(item)}
+                onTapTodoItem={() => onTapTodoItem(item)}
               />
             </Swipeable>
           }
@@ -171,8 +183,8 @@ class TodoScreen extends React.Component {
         />
         <View style={styles.input}>
           <Input
-            onChangeText={(text) => this.setState({inputText: text})}
-            value={this.state.inputText}
+            onChangeText={(text) => setInputText(text)}
+            value={inputText}
             containerStyle={styles.inputText}
             placeholder='input text'
           />
@@ -185,37 +197,16 @@ class TodoScreen extends React.Component {
               />
             }
             title=""
-            onPress={this.onAddItem}
+            onPress={onAddItem}
             buttonStyle={styles.inputButton}
           />
         </View>
       </KeyboardAvoidingView>
-    );
-  }
+  );
 }
 
-const mapStateToProps = state => {
-  return {
-    todos: state.todos.todos,
-  }
-}
+export default TodoScreen;
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addTodo(text) {
-      dispatch(addTodo(text))
-    },
-    toggleTodo(todo) {
-      dispatch(toggleTodo(todo))
-    },
-    deleteTodo(todo) {
-      dispatch(deleteTodo(todo))
-    }
-  
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -271,5 +262,7 @@ const styles = StyleSheet.create({
   },
 
 });
+
+
 
 
