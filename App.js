@@ -95,9 +95,8 @@ function SettingsStack() {
   );
 }
 
-class MainTabScreen extends React.Component {
+function MainTabScreen() {
 
-  render(){
     return (
       <Tab.Navigator
         initialRouteName="HomeStack"
@@ -133,7 +132,6 @@ class MainTabScreen extends React.Component {
           }} />
         </Tab.Navigator>
     );
-  }
 }
 
 function RootStackScreen() {
