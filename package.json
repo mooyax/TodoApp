@@ -27,7 +27,8 @@
     "react-native-web": "^0.13.14",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
-    "redux-persist": "^5.10.0"
+    "redux-persist": "^5.10.0",
+    "react-native-appearance": "~0.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

@@ -1,4 +1,4 @@
-import { TODO } from './actions';
+import { TODO, SETTINGS } from './actions';
 
 //アクション関数
 export const addTodo = (text) => {
@@ -19,5 +19,12 @@ export const toggleTodo = (todo) => {
     return {
         type: TODO.TOGGLE,
         todo
+    }
+}
+
+export const themeSetting = (theme) => {
+    return {
+        type: SETTINGS.THEME,
+        theme
     }
 }

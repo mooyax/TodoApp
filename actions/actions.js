@@ -4,3 +4,7 @@ export const TODO = {
     DELETE: 'TODO_DELETE',
     TOGGLE: 'TODO_TOGGLE'
 }
+
+export const SETTINGS = {
+    THEME: 'SETTING_THEME'
+}

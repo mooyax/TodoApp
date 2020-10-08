@@ -1,4 +1,4 @@
-import { TODO } from './actions'
+import { TODO,SETTINGS } from '../actions/actions'
 
 //TodoのReducer
 
@@ -6,6 +6,7 @@ import { TODO } from './actions'
 const initialState = {
     todos: [],
     currentIndex: 0,
+    currentTheme: 'light',
 }
 
 const todoReducer = (state = initialState, action) => {
@@ -31,15 +32,19 @@ const todoReducer = (state = initialState, action) => {
             }
           
         case TODO.TOGGLE:
-   
-   
             todoItem.done = !todoItem.done
             todos[index] = todoItem
             return {
                 ...state,
                 todos:todos
             }
-            
+        
+        case SETTINGS.THEME:
+            return {
+                ...state,
+                currentTheme:action.theme 
+            }
+        
         default:
             return state
     }

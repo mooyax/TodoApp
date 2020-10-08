@@ -1,23 +1,18 @@
 
-import React, { useState, useCallback,useReducer  } from 'react';
+import React, { useState, useCallback, } from 'react';
 import { 
   StyleSheet, 
-  Text, 
   View, 
   StatusBar, 
   Platform,
-  ScrollView, 
-  //TextInput,
-  //Button,
-  AsyncStorage,
   KeyboardAvoidingView, 
   TouchableOpacity,
   Animated,
-  Alert
 } from 'react-native';
 
-import {  FlatList, RectButton } from 'react-native-gesture-handler';
+import {  FlatList, } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { useTheme } from '@react-navigation/native';
 
 import {
   SearchBar,
@@ -36,7 +31,7 @@ const AnimatedIcon = Animated.createAnimatedComponent(Icon2);
 import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 import { useDispatch, useSelector } from "react-redux";
-import {addTodo, deleteTodo, toggleTodo } from './actionCreators';
+import {addTodo, deleteTodo, toggleTodo } from '../actions/actionCreators';
 
 
 const HEADER_HEIGHT = 44;
@@ -47,14 +42,16 @@ const TODO = "@todoapp.todo"
 const TodoItem = (props) => {
   let icon = null
   if (props.done === true) {
-    icon = <Icon2 name="done" />
+    icon = <Icon2 name="done" color={props.iconColor} />
   }
   return (
     <TouchableOpacity onPress={props.onTapTodoItem}>
       <ListItem
         title={props.title}
+        titleStyle={props.titleStyle}
         rightIcon={icon}
         bottomDivider
+        containerStyle={props.containerStyle}
       />
     </TouchableOpacity>
   )
@@ -73,9 +70,8 @@ const TodoScreen = () => {
 
   const  todos = useSelector(state => state.todos.todos);
    // ステートをグローバルストアから取り出す
-
-
  
+   const {colors} = useTheme();
   //uncheckTodoItem = () => {
   //  return this.props.todos.length
   //}
@@ -140,6 +136,7 @@ const TodoScreen = () => {
     refsArray[todoItem.index].close();
   };
 
+  let todo = todos
   if (filterText !== "") {
     todo = todo.filter(t => t.title.includes(filterText))
   }
@@ -161,9 +158,12 @@ const TodoScreen = () => {
           onClear={() => setfilterText("")}
           value={filterText}
           placeholder="Type filter text"
+          containerStyle={{backgroundColor: colors.background,color:colors.text}}
+          inputStyle={{backgroundColor: colors.background,color:colors.text}}
+          inputContainerStyle={{backgroundColor: colors.card,color:colors.text}}
         />
         <FlatList
-          data={todos}
+          data={todo}
           //extraData={state}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({item}) => 
@@ -176,6 +176,9 @@ const TodoScreen = () => {
                 title={item.title}
                 done={item.done}
                 onTapTodoItem={() => onTapTodoItem(item)}
+                containerStyle={{backgroundColor: colors.background,color:colors.text}}
+                titleStyle={{color:colors.text}}
+                iconColor={colors.text}
               />
             </Swipeable>
           }
@@ -184,6 +187,7 @@ const TodoScreen = () => {
         <View style={styles.input}>
           <Input
             onChangeText={(text) => setInputText(text)}
+            inputStyle={{color: colors.text}}  
             value={inputText}
             containerStyle={styles.inputText}
             placeholder='input text'
@@ -198,7 +202,7 @@ const TodoScreen = () => {
             }
             title=""
             onPress={onAddItem}
-            buttonStyle={styles.inputButton}
+            buttonStyle={styles.inputButton,{backgroundColor:colors.background}}
           />
         </View>
       </KeyboardAvoidingView>
@@ -211,7 +215,7 @@ export default TodoScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    //backgroundColor: 'white',
     paddingTop: STATUSBAR_HEIGHT,
   },
   filter: {
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   separator: {
-    backgroundColor: 'rgb(200, 199, 204)',
+    //backgroundColor: 'rgb(200, 199, 204)',
     height: StyleSheet.hairlineWidth,
   },
   todolist: {
@@ -245,11 +249,11 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderWidth: 0,
-    backgroundColor: "white"
+    //backgroundColor: "white"
   },
   todoItem: {
     fontSize: 20,
-    backgroundColor: "white"
+    //backgroundColor: "white"
   },
   todoItemDone: {
     fontSize: 20,
