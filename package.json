@@ -9,14 +9,18 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
+    "@react-native-community/netinfo": "^5.9.6",
     "@react-navigation/bottom-tabs": "^5.9.1",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.2",
+    "aws-amplify": "^3.3.3",
+    "aws-amplify-react-native": "^4.2.7",
     "expo": "^39.0.3",
     "expo-status-bar": "~1.0.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.0.tar.gz",
+    "react-native-appearance": "~0.3.3",
     "react-native-elements": "^2.2.1",
     "react-native-gesture-handler": "~1.7.0",
     "react-native-iphone-x-helper": "^1.2.1",
@@ -27,8 +31,7 @@
     "react-native-web": "^0.13.14",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
-    "redux-persist": "^5.10.0",
-    "react-native-appearance": "~0.3.3"
+    "redux-persist": "^5.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

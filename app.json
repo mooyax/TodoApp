@@ -9,7 +9,7 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "userInterfaceStyle": "automatic",
+      "userInterfaceStyle": "automatic"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
