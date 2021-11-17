@@ -1,4 +1,5 @@
-import { TODO,SETTINGS } from '../actions/actions'
+import { handleActions } from 'redux-actions'
+import { Actions } from '../actions/actionCreators'
 
 //TodoのReducer
 
@@ -9,11 +10,46 @@ const initialState = {
     currentTheme: 'light',
 }
 
+function deleteTodoEx(todo, Todos){
+    const todos = Object.assign([], Todos)
+    const index = todos.indexOf(todo)
+    todos.splice(index,1)
+    return todos
+}
+
+function toggleTodoEx(todo, Todos){
+    const todos = Object.assign([], Todos)
+    const index = todos.indexOf(todo)
+    todo.done = !todo.done
+    todos[index] = todo
+    return todos
+}
+
+const todoReducer = handleActions({
+    [Actions.todoAdd]: (state, action) =>({
+        ...state,
+        todos: [...state.todos, {title: action.payload, index: state.currentIndex, done: false}],
+        currentIndex: state.currentIndex + 1
+    }),
+    [Actions.todoDelete]: (state, action) =>({
+        ...state,
+        todos:deleteTodoEx(action.payload, state.todos)      
+    }),
+    [Actions.todoToggle]: (state, action) =>({
+        ...state,
+        todos:toggleTodoEx(action.payload, state.todos)
+    }),
+    [Actions.themeSettings]: (state, action) =>({
+        ...state,
+        currentTheme:action.payload
+    }),
+}, initialState)
+
+export default todoReducer
+/*
 const todoReducer = (state = initialState, action) => {
 
-    const todoItem = action.todo
-    const todos = Object.assign([], state.todos)
-    const index = todos.indexOf(todoItem)
+  
 
     switch(action.type) {
         case TODO.ADD:
@@ -25,18 +61,22 @@ const todoReducer = (state = initialState, action) => {
             }
             
         case TODO.DELETE:
+            const todoItem = action.todo
+            const index = todos.indexOf(todoItem)
             todos.splice(index,1)
             return {
                 ...state,
-                todos:todos
+                todos:Object.assign([], state.todos)
             }
           
         case TODO.TOGGLE:
+            const todoItem = action.todo
+            const index = todos.indexOf(todoItem)
             todoItem.done = !todoItem.done
             todos[index] = todoItem
             return {
                 ...state,
-                todos:todos
+                todos:Object.assign([], state.todos)
             }
         
         case SETTINGS.THEME:
@@ -51,3 +91,5 @@ const todoReducer = (state = initialState, action) => {
 }
 
 export default todoReducer
+
+*/

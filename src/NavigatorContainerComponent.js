@@ -15,9 +15,6 @@ const NavigatorContainerComponent = () => {
 
     themeName = themeName=='auto'?Appearance.getColorScheme():themeName;
 
-
-    
-
     return (
         <NavigationContainer theme={themeName=='dark' ? DarkTheme : DefaultTheme}>
             <PersistGate loading={null} persistor={persistor}>

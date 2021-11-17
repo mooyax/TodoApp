@@ -1,30 +1,9 @@
-import { TODO, SETTINGS } from './actions';
+import { createAction, createActions } from 'redux-actions'
 
 //アクション関数
-export const addTodo = (text) => {
-    return {
-        type: TODO.ADD,
-        text
-    }
-}
-
-export const deleteTodo = (todo) => {
-    return {
-        type: TODO.DELETE,
-        todo
-    }
-}
-
-export const toggleTodo = (todo) => {
-    return {
-        type: TODO.TOGGLE,
-        todo
-    }
-}
-
-export const themeSetting = (theme) => {
-    return {
-        type: SETTINGS.THEME,
-        theme
-    }
-}
+export const Actions = createActions(
+        'TODO_ADD',
+        'TODO_DELETE',
+        'TODO_TOGGLE',
+        'THEME_SETTINGS',
+)

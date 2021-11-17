@@ -31,7 +31,7 @@ const AnimatedIcon = Animated.createAnimatedComponent(Icon2);
 import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 import { useDispatch, useSelector } from "react-redux";
-import {addTodo, deleteTodo, toggleTodo } from '../actions/actionCreators';
+import { Actions } from '../actions/actionCreators';
 
 
 const HEADER_HEIGHT = 44;
@@ -72,6 +72,8 @@ const TodoScreen = () => {
    // ステートをグローバルストアから取り出す
  
    const {colors} = useTheme();
+
+   
   //uncheckTodoItem = () => {
   //  return this.props.todos.length
   //}
@@ -94,18 +96,18 @@ const TodoScreen = () => {
     if (title == "") {
       return
     };
-    dispatch(addTodo(title));
+    dispatch(Actions.todoAdd(title));
     setInputText("");
 
   },[inputText,dispatch]);
 
 
   const onDeleteItem = useCallback((todoItem) => { 
-    dispatch(deleteTodo(todoItem));
+    dispatch(Actions.todoDelete(todoItem));
   },[dispatch]);
 
   const onTapTodoItem = useCallback((todoItem) => {
-    dispatch(toggleTodo(todoItem));
+    dispatch(Actions.todoToggle(todoItem));
   },[dispatch]);
 
   const renderRightActions = (progress, todoItem) => {
@@ -116,7 +118,7 @@ const TodoScreen = () => {
 
     const pressHandler = () => {
       close(todoItem);
-      dispatch(deleteTodo(todoItem));
+      dispatch(Actions.todoDelete(todoItem));
     };
 
     return (
@@ -155,7 +157,7 @@ const TodoScreen = () => {
           platform={platform}
           cancelButtonTitle="Cancel"
           onChangeText={(text) => setFilterText(text)}
-          onClear={() => setfilterText("")}
+          onClear={() => setFilterText("")}
           value={filterText}
           placeholder="Type filter text"
           containerStyle={{backgroundColor: colors.background,color:colors.text}}

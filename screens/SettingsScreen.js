@@ -3,7 +3,7 @@ import { View, Text, } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 import { useTheme } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
-import {themeSetting} from '../actions/actionCreators';
+import { Actions } from '../actions/actionCreators';
 
 
 // 選択肢の定義
@@ -22,7 +22,7 @@ const SettingsScreen=()=> {
 
     const updateIndex = (selectedIndex) => {
 
-        dispatch(themeSetting(Object.values(buttons)[selectedIndex]));
+        dispatch(Actions.themeSettings(Object.values(buttons)[selectedIndex]));
     };
 
 
